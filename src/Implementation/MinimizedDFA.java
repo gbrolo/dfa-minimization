@@ -99,72 +99,127 @@ public class MinimizedDFA {
         this.partitionList.add(F);
     }
 
-    private List<List<List<State>>> setPartitionList (List<List<List<State>>> partitionList) {
-        HashMap<List<State>, HashMap<String, List<State>>> dfaTable = dfa.getDfaTable(); // DFA's transition table
-        equivalent = false;
-        List<List<List<State>>> tmpPartitionListGlobal = new LinkedList<>();
+    private List<List<List<State>>> setPartitionList (List<List<List<State>>> partitions) {
+        boolean flag = false;
+        List<List<List<State>>> tmpPartitions = partitions;
 
-        for (int i = 0; i < partitionList.size(); i++) {
-            List<List<State>> currentSet = partitionList.get(i); // the current Set
-            List<State> equivalenceSet = currentSet.get(0); // first subset of set to establish equivalences
+        while (!flag) {
+            List<List<List<State>>> subPartitions = new LinkedList<>();
+            for (int k = 0; k < tmpPartitions.size(); k++) {
+                List<List<State>> partition = tmpPartitions.get(k);
+                List<State> representant = partition.get(0);
 
-            List<List<List<State>>> tmpPartitionList = new LinkedList<>();
-            List<List<State>> eqPartition = new LinkedList<>();
-            eqPartition.add(equivalenceSet);
-            tmpPartitionList.add(eqPartition);
+                for (int i = 0; i < partition.size(); i++) {
+                    List<State> state = partition.get(i);
+                    if (state != representant) {
+                        boolean b = verifyEquivalence(representant, state, tmpPartitions);
 
-            // iterate over symbolList
-            for (int k = 1; k < currentSet.size(); k++) {
-                List<State> setToCompare = currentSet.get(k);
-                int symbolCont = 0;
+                        if (b) {
+                            if (subPartitions.size() == 0) {
+                                List<List<State>> newPartition = new LinkedList<>();
+                                newPartition.add(representant);
+                                newPartition.add(state);
+                                if (!subPartitions.contains(newPartition)) {
+                                    subPartitions.add(newPartition);
+                                }
+                            } else {
+                                for (int t = 0; t < subPartitions.size(); t++) {
+                                    List<List<State>> subPartition = subPartitions.get(t);
+                                    if (subPartition.contains(representant)) {
+                                        subPartition.add(state);
+                                    } else {
+                                        List<List<State>> newPartition = new LinkedList<>();
+                                        newPartition.add(representant);
+                                        newPartition.add(state);
+                                        if (!subPartitions.contains(newPartition)) {
+                                            subPartitions.add(newPartition);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (subPartitions.size() == 0) {
+                                List<List<State>> newPartition = new LinkedList<>();
+                                newPartition.add(representant);
+                                subPartitions.add(newPartition);
+                                List<List<State>> newPartition2 = new LinkedList<>();
+                                newPartition2.add(state);
+                                subPartitions.add(newPartition2);
+                            } else {
+                                for (int r = 0; r < subPartitions.size(); r++) {
+                                    List<List<State>> partitionNew = subPartitions.get(r);
 
-                for (int j = 0; j < this.dfa.getSymbolList().size(); j++){
-                    String currSymbol = Character.toString(this.dfa.getSymbolList().get(j));
+                                    if (!partitionNew.contains(representant)) {
+                                        List<State> newRepresentant = partitionNew.get(0);
+                                        boolean newb = verifyEquivalence(newRepresentant, state, tmpPartitions);
 
-                    List<State> eqSetWithSymbol = dfaTable.get(equivalenceSet).get(currSymbol);
-                    List<State> setToCompareWithSymbol = dfaTable.get(setToCompare).get(currSymbol);
+                                        if (newb) {
+                                            partitionNew.add(state);
+                                        } else if (r == (subPartitions.size()-1)) {
+                                            List<List<State>> newPartition = new LinkedList<>();
+                                            newPartition.add(state);
+                                            if (!subPartitions.contains(newPartition)) {
+                                                subPartitions.add(newPartition);
+                                            }
+                                        }
 
-                    for (int m = 0; m < partitionList.size(); m++) {
-                        if ((partitionList.get(m).contains(eqSetWithSymbol)) &&
-                                partitionList.get(m).contains((setToCompareWithSymbol))) {
-                            //equivalent = true;
-                            symbolCont++;
-                            m = partitionList.size();
+                                    }
+
+                                }
+                            }
                         }
+
                     }
+
                 }
 
-                if (symbolCont == this.dfa.getSymbolList().size()) {
-                    equivalent = true;
-                }
+            }
 
-                if (equivalent) {
-                    for (int p = 0; p < tmpPartitionList.size(); p++) {
-                        if (tmpPartitionList.get(p).contains(equivalenceSet)) {
-                            tmpPartitionList.get(p).add(setToCompare);
-                        }
-                    }
-                } else {
-                    if (tmpPartitionList.size() == 1) {
-                        List<List<State>> newPartition = new LinkedList<>();
-                        newPartition.add(setToCompare);
-                        tmpPartitionList.add(newPartition);
-                    } else {
-                        tmpPartitionList = setPartitionList(tmpPartitionList);
-                    }
+            if (tmpPartitions.size() == subPartitions.size()) {
+                flag = true;
+            } else if(subPartitions.size() < tmpPartitions.size()) {
+                flag = true;
+            } else {
+                tmpPartitions = subPartitions;
+            }
+
+        }
+
+        return tmpPartitions;
+    }
+
+    private boolean verifyEquivalence(List<State> representant, List<State> state, List<List<List<State>>> partitions) {
+        int symbolSize = this.dfa.getSymbolList().size();
+        int symbolCont = 0;
+
+        for (int i = 0; i < symbolSize; i++) {
+            List<State> representantWithSymbol = this.dfa.getDfaTable().get(representant).get(
+                    Character.toString(this.dfa.getSymbolList().get(i))
+            );
+            List<State> stateWithSymbol = this.dfa.getDfaTable().get(state).get(
+                    Character.toString(this.dfa.getSymbolList().get(i))
+            );
+
+            if (representantWithSymbol.size()==0 && stateWithSymbol.size()==0) {
+                symbolCont++;
+            }
+
+            for (int j = 0; j < partitions.size(); j++) {
+                List<List<State>> partition = partitions.get(j);
+                if (partition.contains(representantWithSymbol) &&
+                        partition.contains(stateWithSymbol)) {
+                    symbolCont++;
+                    break;
                 }
-                tmpPartitionListGlobal.addAll(tmpPartitionList);
             }
         }
-
-        if (partitionList.size() != tmpPartitionListGlobal.size()) {
-            setPartitionList(tmpPartitionListGlobal);
+        boolean equivalent = false;
+        if (symbolCont == symbolSize) {
+            equivalent = true;
         }
 
-        //this.partitionList = partitionList;
-        //System.out.println(this.partitionList.toString());
-
-        return partitionList;
+        return equivalent;
     }
 
     public List<List<List<State>>> getPartitionList () { return this.partitionList; }
