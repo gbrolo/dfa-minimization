@@ -134,4 +134,6 @@ public class DFA {
     public List<Integer> getFinalStates () { return this.finalStates; }
     public List<Integer> getInitialStates () { return this.initialStates; }
     public HashMap<List<State>, Integer> getDfaStatesWithNumbering () { return this.dfaStatesWithNumbering; }
+    public List<List<State>> getDfaStates () { return this.dfaStates; }
+    public HashMap<List<State>, HashMap<String, List<State>>> getDfaTable () { return this.dfaTable; }
 }
