@@ -2,6 +2,7 @@ package Run;
 
 import Implementation.AFN;
 import Implementation.DFA;
+import Implementation.DirectDFA.REtoDFA;
 import Implementation.MinimizedDFA;
 import Implementation.Transformation;
 
@@ -104,6 +105,8 @@ public class Runnable {
             mDfaWriter.println("INITIAL STATE: " + minimizedDFA.getInitialStates());
             mDfaWriter.println("FINAL STATES: " + minimizedDFA.getFinalStates());
             mDfaWriter.close();
+
+            REtoDFA direct = new REtoDFA(afn.getPostFixRegExp());
 
         } catch (IOException e) {
             e.printStackTrace();

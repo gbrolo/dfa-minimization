@@ -1,9 +1,9 @@
-REGULAR EXPRESSION: ab*ab*
-REGULAR EXPRESSION IN POSTFIX: ab*.a.b*.
-SYMBOL LIST: [a, b]
-STATES ([PARTITION]=STATE ID): {[[4, 5, 6, 2, 1], [2, 5, 6, 3]]=1, [[10, 11, 8, 7], [8, 11, 9]]=2, [[0]]=0}
+REGULAR EXPRESSION: 0*10*
+REGULAR EXPRESSION IN POSTFIX: 0*1.0*.
+SYMBOL LIST: [0, 1]
+STATES ([PARTITION]=STATE ID): {[[3, 0, 4, 2], [0, 3, 4, 1]]=0, [[8, 9, 6, 5], [6, 9, 7]]=1}
 TRANSITION TABLE ([STATE]={SYMBOL=[STATE]}) 
 WHERE STATE CORRESPONDS TO A STATE IN 'STATES': 
-{[[4, 5, 6, 2, 1], [2, 5, 6, 3]]={a=[[10, 11, 8, 7], [8, 11, 9]], b=[[4, 5, 6, 2, 1], [2, 5, 6, 3]]}, [[10, 11, 8, 7], [8, 11, 9]]={b=[[10, 11, 8, 7], [8, 11, 9]]}, [[0]]={a=[[4, 5, 6, 2, 1], [2, 5, 6, 3]]}}
+{[[3, 0, 4, 2], [0, 3, 4, 1]]={0=[[3, 0, 4, 2], [0, 3, 4, 1]], 1=[[8, 9, 6, 5], [6, 9, 7]]}, [[8, 9, 6, 5], [6, 9, 7]]={0=[[8, 9, 6, 5], [6, 9, 7]]}}
 INITIAL STATE: []
 FINAL STATES: []
