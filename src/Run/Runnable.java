@@ -107,6 +107,16 @@ public class Runnable {
             mDfaWriter.close();
 
             REtoDFA direct = new REtoDFA(afn.getPostFixRegExp());
+            PrintWriter directDFAWriter = new PrintWriter("DIRECT_DFA.txt", "UTF-8");
+            directDFAWriter.println("REGULAR EXPRESSION: "+regexp);
+            directDFAWriter.println("REGULAR EXPRESSION IN POSTFIX: "+afn.getPostFixRegExp());
+            directDFAWriter.println("SYMBOL LIST: " + direct.getSymbolList());
+            directDFAWriter.println("POSITIONS (POSITION_ID = SYMBOL): " + direct.getStateSymbol());
+            directDFAWriter.println("STATE MAP(STATE = FOLLOWPOS): " + direct.getStateMap());
+            directDFAWriter.println("TRANSITION TABLE: " + direct.getTransitionTable());
+            directDFAWriter.println("INITIAL STATE: " + direct.getInitialState());
+            directDFAWriter.println("FINAL STATES: " + direct.getFinalStates());
+            directDFAWriter.close();
 
         } catch (IOException e) {
             e.printStackTrace();

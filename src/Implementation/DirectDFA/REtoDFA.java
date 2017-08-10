@@ -11,24 +11,120 @@ public class REtoDFA {
     private Stack<Node> nodeStack;
     private int posCount;
     private int last;
+    private int stateIDCount;
+    private List<String> symbolList;
+    private List<Integer> finalStates;
+    private List<Integer> initialState;
     private HashMap<Integer, List<Integer>> followposTable;
+    private HashMap<Integer, String> stateSymbol;
+    private HashMap<Integer, List<Integer>> stateMap; // DFA states
+    private HashMap<List<Integer>, Integer> stateMapBck; // DFA states backwards notation
+    private HashMap<Integer, HashMap<String, Integer>> transitionTable;
 
     public REtoDFA(String postfixRegexp) {
         this.postfixRegexp = postfixRegexp;
         this.nodeList = new LinkedList<>();
         this.nodeStack = new Stack<>();
+        this.symbolList = new LinkedList<>();
+        this.finalStates = new LinkedList<>();
+        this.initialState = new LinkedList<>();
         this.followposTable = new HashMap<>();
+        this.stateSymbol = new HashMap<>();
+        this.stateMap = new HashMap<>();
+        this.stateMapBck = new HashMap<>();
+        this.transitionTable = new HashMap<>();
+        stateIDCount = 0;
         // extend the regexp
         extendRE();
         // find all nullable, firstpos and lastpos and fill the nodeList
         fillList();
         // compute followpos
         findFollowPos();
+        // build the minimized DFA
         System.out.println(followposTable.toString());
+        buildDFA();
     }
 
     private void extendRE() {
         this.postfixRegexp = this.postfixRegexp + "#.";
+    }
+
+    private void buildDFA() {
+        // compute stateMap
+        for (int i = 0; i < followposTable.size(); i++) {
+            if (!followposTable.isEmpty()) {
+                if (followposTable.get(i) != null) {
+                    if (!stateMap.containsValue(followposTable.get(i))){
+                        stateMap.put(stateIDCount, followposTable.get(i));
+                        stateMapBck.put(followposTable.get(i), stateIDCount);
+                        stateIDCount++;
+                    }
+                }
+            }
+        }
+
+        // traverse stateMap to check if all pos are in there
+        for (int j = 1; j < posCount; j++) {
+            boolean flag = false;
+            for (int i = 0; i < stateMap.size(); i++) {
+                if ((stateMap.get(i) != null) && stateMap.get(i).contains(j)) {
+                    flag = true;
+                }
+            }
+
+            if (!flag) {
+                List<Integer> state = new LinkedList<>();
+                state.add(j);
+                stateMap.put(stateIDCount, state);
+                stateMapBck.put(state, stateIDCount);
+                stateIDCount++;
+                break;
+            }
+
+        }
+
+        // traverse stateMap to check for finalState & initialState
+        for (int i = 0; i < stateMap.size(); i++) {
+            if (stateMap.get(i).contains(last)) {
+                finalStates.add(stateMapBck.get(stateMap.get(i)));
+            }
+
+            if (stateMap.get(i).contains(1)) {
+                initialState.add(stateMapBck.get(stateMap.get(i)));
+            }
+        }
+
+        for (int i = 0; i < stateMap.size(); i++) {
+            List<Integer> currentState = stateMap.get(i);
+
+            HashMap<String, Integer> tmpCol = new HashMap<>();
+            for (int j = 0; j < currentState.size(); j++) {
+                int currentPos = currentState.get(j);
+                String currPosSymbol = stateSymbol.get(currentPos);
+
+
+                // traverse the symbollist
+                for (int k = 0; k < symbolList.size(); k++) {
+                    if (currPosSymbol.equals(symbolList.get(k))) { // add followpos of pos(i)
+                        List<Integer> posFollowPos = followposTable.get(currentPos);
+                        int posFollowPosStateID = stateMapBck.get(posFollowPos);
+                        tmpCol.put(symbolList.get(k), posFollowPosStateID);
+                    }
+                }
+
+            }
+
+//            if ((currentState.size() == 1) && (currentState.contains(last))) {
+//                for (int k = 0; k < symbolList.size(); k++) {
+//                    int index = stateMapBck.get(currentState);
+//                    tmpCol.put(symbolList.get(k), index);
+//                }
+//            }
+
+            transitionTable.put(stateMapBck.get(currentState), tmpCol);
+
+        }
+
     }
 
     private void findFollowPos() {
@@ -141,6 +237,12 @@ public class REtoDFA {
                 tmpNode.setLastPos(flPos); // add LastPos
                 tmpNode.setNullable(false); // nullable is false for pos
 
+                stateSymbol.put(pos, currSymbol); // assign each position with its symbol, where symbol belongs to alphabet
+
+                if (!symbolList.contains(currSymbol) && (!currSymbol.equals("#"))) {
+                    symbolList.add(currSymbol); // add symbol to symbolList
+                }
+
                 if (currSymbol.equals("#")) { tmpNode.setLast(true); }
                 pos++; // add 1 to pos
                 // add to list and stack
@@ -220,5 +322,12 @@ public class REtoDFA {
             }
         }
     }
+
+    public List<String> getSymbolList() { return this.symbolList; }
+    public List<Integer> getFinalStates() { return this.finalStates; }
+    public List<Integer> getInitialState() { return this.initialState; }
+    public HashMap<Integer, String> getStateSymbol() { return this.stateSymbol; }
+    public HashMap<Integer, List<Integer>> getStateMap() { return this.stateMap; }
+    public HashMap<Integer, HashMap<String, Integer>> getTransitionTable() { return this.transitionTable; }
 
 }

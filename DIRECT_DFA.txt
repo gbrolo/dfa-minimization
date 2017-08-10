@@ -1,0 +1,8 @@
+REGULAR EXPRESSION: b+abc+
+REGULAR EXPRESSION IN POSTFIX: bb*.a.b.c.c*.
+SYMBOL LIST: [b, a, c]
+POSITIONS (POSITION_ID = SYMBOL): {1=b, 2=b, 3=a, 4=b, 5=c, 6=c, 7=#}
+STATE MAP(STATE = FOLLOWPOS): {0=[2, 3], 1=[4], 2=[5], 3=[6, 7], 4=[1]}
+TRANSITION TABLE: {0={a=1, b=0}, 1={b=2}, 2={c=3}, 3={c=3}, 4={b=0}}
+INITIAL STATE: [4]
+FINAL STATES: [3]
