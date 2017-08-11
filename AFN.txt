@@ -1,8 +1,8 @@
-REGULAR EXPRESSION: 0*10*
-REGULAR EXPRESSION IN POSTFIX: 0*1.0*.
-SYMBOL LIST: [0, 1]
-TRANSITIONS LIST: [0 - 0 - 1, 1 - ε - 0, 2 - ε - 3, 2 - ε - 0, 1 - ε - 3, 4 - 1 - 5, 3 - ε - 4, 6 - 0 - 7, 7 - ε - 6, 8 - ε - 9, 8 - ε - 6, 7 - ε - 9, 5 - ε - 8]
-FINAL STATE: [9]
-STATES: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-INITIAL STATE: [2]
-GENERATION TIME: 6 ms
+REGULAR EXPRESSION: aεa*
+REGULAR EXPRESSION IN POSTFIX: aε.a*.
+SYMBOL LIST: [a]
+TRANSITIONS LIST: [0 - a - 1, 2 - ε - 3, 1 - ε - 2, 4 - a - 5, 5 - ε - 4, 6 - ε - 7, 6 - ε - 4, 5 - ε - 7, 3 - ε - 6]
+FINAL STATE: [7]
+STATES: [0, 1, 2, 3, 4, 5, 6, 7]
+INITIAL STATE: [0]
+GENERATION TIME: 15 ms

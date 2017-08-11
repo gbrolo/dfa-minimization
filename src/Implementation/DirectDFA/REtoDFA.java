@@ -227,27 +227,38 @@ public class REtoDFA {
             // if symbol is in alphabet or is #
             if ((!currSymbol.equals("*")) && (!currSymbol.equals(".")) && (!currSymbol.equals("|"))) {
 
-                Node tmpNode = new Node(currSymbol);
-                tmpNode.setIsPosition(true); // Symbol has position
-                tmpNode.setPosition(pos); // set Position
-                List<Integer> flPos = new LinkedList<>();
-                flPos.add(pos);
-                tmpNode.setFirstPos(flPos); // add firstPos
-                tmpNode.setLastPos(flPos); // add LastPos
-                tmpNode.setNullable(false); // nullable is false for pos
+                if (!currSymbol.equals("ε")) {
+                    Node tmpNode = new Node(currSymbol);
+                    tmpNode.setIsPosition(true); // Symbol has position
+                    tmpNode.setPosition(pos); // set Position
+                    List<Integer> flPos = new LinkedList<>();
+                    flPos.add(pos);
+                    tmpNode.setFirstPos(flPos); // add firstPos
+                    tmpNode.setLastPos(flPos); // add LastPos
+                    tmpNode.setNullable(false); // nullable is false for pos
 
-                stateSymbol.put(pos, currSymbol); // assign each position with its symbol, where symbol belongs to alphabet
+                    stateSymbol.put(pos, currSymbol); // assign each position with its symbol, where symbol belongs to alphabet
 
-                if (!symbolList.contains(currSymbol) && (!currSymbol.equals("#"))) {
-                    symbolList.add(currSymbol); // add symbol to symbolList
+                    if (!symbolList.contains(currSymbol) && (!currSymbol.equals("#"))) {
+                        symbolList.add(currSymbol); // add symbol to symbolList
+                    }
+
+                    if (currSymbol.equals("#")) { tmpNode.setLast(true); }
+                    pos++; // add 1 to pos
+                    // add to list and stack
+                    nodeList.add(tmpNode);
+                    nodeStack.push(tmpNode);
+                    posCount = pos;
+                } else {
+                    Node tmpNode = new Node(currSymbol);
+                    tmpNode.setIsPosition(false);
+                    List<Integer> emptySet = new LinkedList<>();
+                    tmpNode.setFirstPos(emptySet);
+                    tmpNode.setLastPos(emptySet);
+                    tmpNode.setNullable(true);
+                    nodeList.add(tmpNode);
+                    nodeStack.push(tmpNode);
                 }
-
-                if (currSymbol.equals("#")) { tmpNode.setLast(true); }
-                pos++; // add 1 to pos
-                // add to list and stack
-                nodeList.add(tmpNode);
-                nodeStack.push(tmpNode);
-                posCount = pos;
             } else if (currSymbol.equals("*")) { // if symbol is kleene star
                 if (!nodeStack.isEmpty()) {
                     Node childNode = nodeStack.pop(); // child node is previous node
