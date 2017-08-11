@@ -95,16 +95,16 @@ public class Runnable {
             dfaWriter.close();
 
             MinimizedDFA minimizedDFA = new MinimizedDFA(dfa);
-//            PrintWriter mDfaWriter = new PrintWriter("MIN_DFA.txt", "UTF-8");
-//            mDfaWriter.println("REGULAR EXPRESSION: "+regexp);
-//            mDfaWriter.println("REGULAR EXPRESSION IN POSTFIX: "+afn.getPostFixRegExp());
-//            mDfaWriter.println("SYMBOL LIST: "+dfa.getSymbolList());
-//            mDfaWriter.println("STATES ([PARTITION]=STATE ID): " + minimizedDFA.getPartitionIDs());
-//            mDfaWriter.println("TRANSITION TABLE ([STATE]={SYMBOL=[STATE]}) \n" +
-//                    "WHERE STATE CORRESPONDS TO A STATE IN 'STATES': \n" + minimizedDFA.getMinimizedDFATable());
-//            mDfaWriter.println("INITIAL STATE: " + minimizedDFA.getInitialStates());
-//            mDfaWriter.println("FINAL STATES: " + minimizedDFA.getFinalStates());
-//            mDfaWriter.close();
+            PrintWriter mDfaWriter = new PrintWriter("MIN_DFA.txt", "UTF-8");
+            mDfaWriter.println("REGULAR EXPRESSION: "+regexp);
+            mDfaWriter.println("REGULAR EXPRESSION IN POSTFIX: "+afn.getPostFixRegExp());
+            mDfaWriter.println("SYMBOL LIST: "+dfa.getSymbolList());
+            mDfaWriter.println("STATES ([PARTITION]=STATE ID): " + minimizedDFA.getPartitionIDs());
+            mDfaWriter.println("TRANSITION TABLE ([STATE]={[SYMBOL]=[STATE]}) \n" +
+                    "WHERE STATE CORRESPONDS TO A STATE IN 'STATES': \n" + minimizedDFA.getMinimizedDFATable());
+            mDfaWriter.println("INITIAL STATE: " + minimizedDFA.getInitialStates());
+            mDfaWriter.println("FINAL STATES: " + minimizedDFA.getFinalStates());
+            mDfaWriter.close();
 
             REtoDFA direct = new REtoDFA(afn.getPostFixRegExp());
             PrintWriter directDFAWriter = new PrintWriter("DIRECT_DFA.txt", "UTF-8");

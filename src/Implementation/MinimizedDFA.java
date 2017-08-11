@@ -9,11 +9,13 @@ public class MinimizedDFA {
     private DFA dfa;
     private List<List<State>> dfaStates;
     private List<Integer> dfaFinalStates;
+    private List<Integer> dfaInitialStates;
     private List<Transition> dfaTransitionList;
     private List<Character> dfaSymbolList;
     private HashMap<List<State>, Integer> dfaStatesWithNumbering;
     private List<List<Integer>> PiSet;
-    private HashMap<List<List<State>>, HashMap<String, List<List<State>>>> minimizedDFATable;
+    private HashMap<List<Integer>, Integer> minimizedDFAStates;
+    private HashMap<Integer, HashMap<String, Integer>> minimizedDFATable;
     private HashMap<List<List<State>>, Integer> partitionIDs;
 
     private List<Integer> finalStates;
@@ -25,6 +27,7 @@ public class MinimizedDFA {
         this.dfa = dfa;
 
         dfaStates = this.dfa.getDfaStates();
+        dfaInitialStates = this.dfa.getInitialStates();
         dfaFinalStates = this.dfa.getFinalStates();
         dfaStatesWithNumbering = this.dfa.getDfaStatesWithNumbering();
         dfaTransitionList = this.dfa.getTransitionsList();
@@ -32,6 +35,7 @@ public class MinimizedDFA {
 
         PiSet = new LinkedList<>();
         minimizedDFATable = new HashMap<>();
+        minimizedDFAStates = new HashMap<>();
         partitionIDs = new HashMap<>();
         finalStates = new LinkedList<>();
         initialStates = new LinkedList<>();
@@ -65,6 +69,46 @@ public class MinimizedDFA {
         List<List<Integer>> finalPi = PiSet;
         PiSet = finalPi;
         System.out.println("PiSet after: " + PiSet.toString());
+
+        int i = 0;
+        for (List<Integer> state : PiSet) {
+            minimizedDFAStates.put(state, i);
+            i++;
+        }
+        System.out.println("minimizedDFAStates: " + minimizedDFAStates.toString());
+
+        // set initial and final states
+        for (List<Integer> set : PiSet) {
+            for (int state : set) {
+                if (dfaFinalStates.contains(state) &&
+                        (!finalStates.contains(minimizedDFAStates.get(set)))) { finalStates.add(minimizedDFAStates.get(set)); }
+                if (dfaInitialStates.contains(state)) { initialStates.add(minimizedDFAStates.get(set)); }
+            }
+        }
+
+        for (List<Integer> state : PiSet) {
+            int id = minimizedDFAStates.get(state);
+            int representative = state.get(0);
+            HashMap<String, Integer> tmpCol = new HashMap<>();
+            for (char a : dfaSymbolList) {
+                String A = Character.toString(a);
+                for (Transition tr : dfaTransitionList) {
+                    if ((tr.getInitialState().getStateId() == representative)
+                            && (tr.getTransitionSymbol().equals(A))) {
+                        int finalState = tr.getFinalState().getStateId();
+                        for (List<Integer> S : PiSet) {
+                            if (S.contains(finalState)) {
+                                int FS = minimizedDFAStates.get(S);
+                                tmpCol.put(A, FS);
+                            }
+                        }
+                    }
+                }
+            }
+            minimizedDFATable.put(id, tmpCol);
+        }
+
+        System.out.println("DFA table: " + minimizedDFATable);
 
     }
 
@@ -122,8 +166,8 @@ public class MinimizedDFA {
     }
     
     public List<List<Integer>> getPiSet() { return this.PiSet; }
-    public HashMap<List<List<State>>, HashMap<String, List<List<State>>>> getMinimizedDFATable () { return this.minimizedDFATable; }
-    public HashMap<List<List<State>>, Integer> getPartitionIDs () { return this.partitionIDs; }
+    public HashMap<Integer, HashMap<String, Integer>> getMinimizedDFATable () { return this.minimizedDFATable; }
+    public HashMap<List<Integer>, Integer> getPartitionIDs () { return this.minimizedDFAStates; }
     public List<Integer> getFinalStates () { return this.finalStates; }
     public List<Integer> getInitialStates () { return this.initialStates; }
 }

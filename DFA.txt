@@ -1,8 +1,8 @@
-REGULAR EXPRESSION: (0|1)1*(0|1)
-REGULAR EXPRESSION IN POSTFIX: 01|1*.01|.
-SYMBOL LIST: [0, 1]
-STATES ([NFA STATE LIST]=DFA STATE ID): {[15, 13, 6, 9, 14, 10, 12, 7]=4, [6, 9, 14, 10, 12, 7, 15, 13]=5, [0, 2, 4]=0, [5, 8, 9, 14, 10, 12, 6, 3]=2, [5, 8, 9, 14, 10, 12, 6, 1]=1, [15, 11]=3}
-TRANSITIONS LIST: [0 - 0 - 1, 0 - 1 - 2, 1 - 0 - 3, 1 - 1 - 4, 2 - 0 - 3, 2 - 1 - 4, 4 - 0 - 3, 4 - 1 - 5, 5 - 0 - 3, 5 - 1 - 5]
-FINAL STATE(S): [3, 4, 5]
+REGULAR EXPRESSION: ab*ab*
+REGULAR EXPRESSION IN POSTFIX: ab*.a.b*.
+SYMBOL LIST: [a, b]
+STATES ([NFA STATE LIST]=DFA STATE ID): {[2, 5, 6, 3]=3, [4, 5, 6, 2, 1]=1, [0]=0, [10, 11, 8, 7]=2, [8, 11, 9]=4}
+TRANSITIONS LIST: [0 - a - 1, 1 - a - 2, 1 - b - 3, 2 - b - 4, 3 - a - 2, 3 - b - 3, 4 - b - 4]
+FINAL STATE(S): [2, 4]
 INITIAL STATE: [0]
-GENERATION TIME: 972498 ns
+GENERATION TIME: 854927 ns
