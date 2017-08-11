@@ -41,15 +41,12 @@ public class Runnable {
                 " * Valid characters:\n" +
                 " *      Use any symbol rather than '|', '*', '+', '?', '^', '.'\n" +
                 " *      You MUST use ε in your expression for representation of an empty word. (Just copy it from here) \n" +
-                " * Example of regexps: \n" +
-                " *      ab*ab* \n" +
-                " *      0?(1|ε)?0* \n" +
-                " * Accepts abbreviations and concatenation by yuxtaposition \n" +
                 "Enter your regexp after this line:");
         Scanner sc = new Scanner(System.in);
 
         regexp = sc.nextLine();
-        System.out.println("File written to: your_current_directory/AFN.txt");
+        System.out.println("Minimized DFA created in directory: /DIRECT_DFA.txt" +
+                "\nDirect DFA created in directory: /MIN_DFA.txt");
         System.out.println("© 2017. brolius (Gabriel Brolo)");
 
         writeFile();

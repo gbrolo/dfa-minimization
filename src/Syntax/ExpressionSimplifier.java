@@ -10,12 +10,36 @@ public class ExpressionSimplifier {
 
     public ExpressionSimplifier (String regExp) {
         this.regExp = regExp;
+        removeDuplicates();
         handleKleeneSum();
         handleLua();
     }
 
     public String getRegExp() {
         return this.regExp;
+    }
+
+    public void removeDuplicates() {
+        boolean stop = false;
+
+        while(!stop) {
+            for (int i = 0; i < regExp.length(); i++) {
+                String currChar = Character.toString(regExp.charAt(i));
+
+                if ((i+1) < regExp.length()) {
+                    if ((currChar.equals("*")) || currChar.equals("|") || currChar.equals("+")
+                            || currChar.equals("?") ||currChar.equals("ε") ) {
+                        if (currChar.equals(Character.toString(regExp.charAt(i+1)))) {
+                            String left = regExp.substring(0, i);
+                            String right = regExp.substring(i+1);
+                            regExp = left + right;
+                            break;
+                        }
+                    }
+                }
+                if (i == regExp.length()-1) { stop = true; }
+            }
+        }
     }
 
     /**
