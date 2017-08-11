@@ -57,7 +57,6 @@ public class MinimizedDFA {
         // add initial partitions to PiSet
         this.PiSet.add(SMinusF);
         this.PiSet.add(F);
-        System.out.println("PiSet: " + PiSet.toString());
 
         List<List<Integer>> newPi = newPartition(PiSet);
 
@@ -68,14 +67,12 @@ public class MinimizedDFA {
 
         List<List<Integer>> finalPi = PiSet;
         PiSet = finalPi;
-        System.out.println("PiSet after: " + PiSet.toString());
 
         int i = 0;
         for (List<Integer> state : PiSet) {
             minimizedDFAStates.put(state, i);
             i++;
         }
-        System.out.println("minimizedDFAStates: " + minimizedDFAStates.toString());
 
         // set initial and final states
         for (List<Integer> set : PiSet) {
@@ -108,7 +105,6 @@ public class MinimizedDFA {
             minimizedDFATable.put(id, tmpCol);
         }
 
-        System.out.println("DFA table: " + minimizedDFATable);
 
     }
 

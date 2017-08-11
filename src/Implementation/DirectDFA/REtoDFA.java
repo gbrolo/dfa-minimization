@@ -41,7 +41,6 @@ public class REtoDFA {
         // compute followpos
         findFollowPos();
         // build the minimized DFA
-        System.out.println(followposTable.toString());
         buildDFA();
     }
 
