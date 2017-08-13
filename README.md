@@ -1,6 +1,6 @@
-# DFA Minimization
+# DFA Minimization - Direct DFA construction
 
-Enter a regexp, then get your minimized DFA.
+Enter a regexp, then get your minimized DFA & direct DFA creation.
 
 Note: If you are a current student of 2017's 'Diseño de Lenguajes de Programación' at UVG,
 YOU CANNOT USE THIS CODE IN ANY WAY, LICENSE WON'T APPLY IN THIS CASE. JUST DON'T...
@@ -56,7 +56,7 @@ word:
 Example of a valid regular expression may be:
 
 ```
-0?(1|ε)?0*
+ab*ab*
 ```
 
 Note that you can use abbreviations and yuxtaposed concatenation, ie. no
@@ -70,13 +70,18 @@ root_directory\REGEXPS.txt
 
 ## Deployment
 
-After running the program, a text file with the contents of the
+After running the program, a text file with the contents of the minimized
 DFA will be exported as:
 
 ```
-root_directory\DFA.txt
+root_directory\MIN_DFA.txt
 ```
 
+The direct generation will be exported to:
+
+```
+root_directory\DIRECT_DFA.txt
+```
 ## Authors
 
 * **Gabriel Brolo** 
@@ -93,3 +98,4 @@ https://gist.github.com/gmenard/6161825
 * To Barry Brown, for explaining the algorithm here: https://www.youtube.com/watch?v=taClnxU-nao
 * However, the previous video NEEDED to be supplemented with: 
 http://web.cecs.pdx.edu/~harry/compilers/slides/LexicalPart3.pdf
+* Minimization algorithm: http://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/min-fa.html
